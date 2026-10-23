@@ -92,9 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (config.levelNumber === 62) {
       specBannerEl.innerHTML = `
         <div class="spec-text">
-          <strong>Lv62 机制引入关（原案确定性引导）</strong><br>
+          <strong>Lv62 机制引入关（确定性首步引导）</strong><br>
           目标：激活果酱罐 × 1 | 步数：22步 | 种子：Seed #1042<br>
-          <span style="color:#f59e0b;">💡 唯一首步指引：点击交换 (3,1) 与 (3,2) 消除红心，罐体充能并腾跃至安全落点！</span>
+          <span style="color:#f59e0b;">💡 唯一首步指引：点击交换第4行第2、3列消除红心，罐体充能并腾跃至安全落点！</span>
         </div>
         <span class="tag">Lv62 已激活</span>
       `;
@@ -127,6 +127,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // 首步引导：仅 Lv62 开局在两格显示虚线高亮，首次有效交换后由 renderer 清除
+  const applyGuideHints = (config) => {
+    renderer.clearGuideHint();
+    if (config.levelNumber === 62) {
+      renderer.showGuideHint([
+        { row: 3, col: 1 },
+        { row: 3, col: 2 }
+      ]);
+    }
+  };
+
   const loadLevel = (config, levelTag) => {
     engine.removeAllListeners();
     currentConfig = config;
@@ -141,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 更新横幅
     updateBanner(config);
+    applyGuideHints(config);
 
     // 更新导航高亮
     document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
@@ -178,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 首次加载即为 Lv62：同步横幅（此前只在切换关卡时更新，导致初始横幅停留在 Phase 1）
   updateBanner(currentConfig);
+  applyGuideHints(currentConfig);
 
   // 重开与控制按钮
   const resetBtn = document.getElementById('btn-reset');
@@ -185,6 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetBtn.addEventListener('click', () => {
       engine.reset();
       renderer.buildBoard();
+      applyGuideHints(currentConfig);
       updateHUD();
       document.getElementById('game-over-modal').classList.add('hidden');
     });
@@ -195,6 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modalRestartBtn.addEventListener('click', () => {
       engine.reset();
       renderer.buildBoard();
+      applyGuideHints(currentConfig);
       updateHUD();
       document.getElementById('game-over-modal').classList.add('hidden');
     });

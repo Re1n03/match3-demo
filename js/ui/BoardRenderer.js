@@ -44,6 +44,11 @@ export class BoardRenderer {
       this.updateInputLockState();
     });
 
+    // 首次有效交换开始即撤掉首步引导（引导只存在于开局）
+    this.engine.on('swapStart', () => {
+      this.clearGuideHint();
+    });
+
     this.engine.on('swapRollback', ({ posA, posB }) => {
       this.playRollbackAnim(posA, posB);
       this.audio.playSwapRollback();
@@ -159,6 +164,28 @@ export class BoardRenderer {
 
     // 每次重建棋盘后同步输入锁状态，确保重置/加载关卡后立即可交互。
     this.updateInputLockState();
+  }
+
+  /**
+   * 显示首步引导高亮（0-based 坐标）
+   */
+  showGuideHint(cells = []) {
+    this.clearGuideHint();
+    this.guideCells = cells.map(cell => ({ row: cell.row, col: cell.col }));
+    for (const cell of this.guideCells) {
+      const cellEl = this.getCellElement(cell.row, cell.col);
+      if (cellEl) cellEl.classList.add('cell-guide-hint');
+    }
+  }
+
+  /**
+   * 清除首步引导高亮
+   */
+  clearGuideHint() {
+    this.guideCells = [];
+    this.container.querySelectorAll('.cell-guide-hint').forEach(cellEl => {
+      cellEl.classList.remove('cell-guide-hint');
+    });
   }
 
   /**
