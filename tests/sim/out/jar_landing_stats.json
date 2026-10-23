@@ -1,0 +1,24 @@
+{
+  "lv62": {
+    "games": 2000,
+    "bot": "mixed",
+    "cap": 22,
+    "gamesWithLeap": 2000,
+    "distribution": {
+      "5,6": 2000
+    }
+  },
+  "lv64": {
+    "games": 2000,
+    "bot": "mixed",
+    "cap": 40,
+    "gamesWithFirst": 2000,
+    "first": {
+      "0,0": 2000
+    },
+    "gamesWithSecond": 1998,
+    "second": {
+      "0,1": 1998
+    }
+  }
+}

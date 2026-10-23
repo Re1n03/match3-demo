@@ -1,0 +1,162 @@
+[
+  {
+    "id": "A_baseline",
+    "desc": "manhattan1 · cap∞ · 十字 · boardA",
+    "winRate": 0.994,
+    "remainingMedian": 18,
+    "remainingP15": 14,
+    "remainingP85": 20,
+    "stepsMedian": 6,
+    "cascadeRate": 0.7110892203771461,
+    "resonanceGameRate": 0.199,
+    "resonanceActivationShare": 0.199,
+    "firstResolution": {
+      "A": 947,
+      "B": 655,
+      "dual": 398,
+      "none": 0
+    },
+    "activationOrder": {
+      "singleA": 1602,
+      "singleB": 1602,
+      "dual": 796,
+      "other": 0
+    },
+    "targetMet": 2,
+    "targetDetail": {
+      "win": true,
+      "remaining": false,
+      "cascade": true,
+      "resonance": false,
+      "count": 2
+    }
+  },
+  {
+    "id": "B_charge8",
+    "desc": "chebyshev1 · cap∞ · 十字 · boardA",
+    "winRate": 0.9935,
+    "remainingMedian": 18,
+    "remainingP15": 15,
+    "remainingP85": 21,
+    "stepsMedian": 6,
+    "cascadeRate": 0.7144378518180435,
+    "resonanceGameRate": 0.479,
+    "resonanceActivationShare": 0.479,
+    "firstResolution": {
+      "A": 696,
+      "B": 346,
+      "dual": 958,
+      "none": 0
+    },
+    "activationOrder": {
+      "singleA": 1042,
+      "singleB": 1042,
+      "dual": 1916,
+      "other": 0
+    },
+    "targetMet": 2,
+    "targetDetail": {
+      "win": true,
+      "remaining": false,
+      "cascade": true,
+      "resonance": false,
+      "count": 2
+    }
+  },
+  {
+    "id": "C_charge8_cap1",
+    "desc": "chebyshev1 · cap1 · 十字 · boardA",
+    "winRate": 0.992,
+    "remainingMedian": 17,
+    "remainingP15": 14,
+    "remainingP85": 19,
+    "stepsMedian": 7,
+    "cascadeRate": 0.7235403892295388,
+    "resonanceGameRate": 0.452,
+    "resonanceActivationShare": 0.452,
+    "firstResolution": {
+      "A": 679,
+      "B": 417,
+      "dual": 904,
+      "none": 0
+    },
+    "activationOrder": {
+      "singleA": 1096,
+      "singleB": 1096,
+      "dual": 1808,
+      "other": 0
+    },
+    "targetMet": 2,
+    "targetDetail": {
+      "win": true,
+      "remaining": false,
+      "cascade": true,
+      "resonance": false,
+      "count": 2
+    }
+  },
+  {
+    "id": "D_charge8_cap1_3x3",
+    "desc": "chebyshev1 · cap1 · 3x3 · boardA",
+    "winRate": 0.9915,
+    "remainingMedian": 18,
+    "remainingP15": 15,
+    "remainingP85": 20,
+    "stepsMedian": 6,
+    "cascadeRate": 0.7316461300081163,
+    "resonanceGameRate": 0.452,
+    "resonanceActivationShare": 0.452,
+    "firstResolution": {
+      "A": 679,
+      "B": 417,
+      "dual": 904,
+      "none": 0
+    },
+    "activationOrder": {
+      "singleA": 1096,
+      "singleB": 1096,
+      "dual": 1808,
+      "other": 0
+    },
+    "targetMet": 2,
+    "targetDetail": {
+      "win": true,
+      "remaining": false,
+      "cascade": true,
+      "resonance": false,
+      "count": 2
+    }
+  },
+  {
+    "id": "E_charge8_cap1_3x3_boardB",
+    "desc": "chebyshev1 · cap1 · 3x3 · boardB",
+    "winRate": 0.992,
+    "remainingMedian": 17,
+    "remainingP15": 13,
+    "remainingP85": 19,
+    "stepsMedian": 7,
+    "cascadeRate": 0.7199604009404776,
+    "resonanceGameRate": 0.181,
+    "resonanceActivationShare": 0.181,
+    "firstResolution": {
+      "A": 1473,
+      "B": 165,
+      "dual": 362,
+      "none": 0
+    },
+    "activationOrder": {
+      "singleA": 1638,
+      "singleB": 1638,
+      "dual": 724,
+      "other": 0
+    },
+    "targetMet": 2,
+    "targetDetail": {
+      "win": true,
+      "remaining": false,
+      "cascade": true,
+      "resonance": false,
+      "count": 2
+    }
+  }
+]

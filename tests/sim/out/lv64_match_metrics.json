@@ -1,0 +1,34 @@
+[
+  {
+    "cap": 19,
+    "games": 2000,
+    "winRate": 0.392,
+    "jar2": {
+      "count": 1550,
+      "mean": 13.42,
+      "median": 13
+    },
+    "honeyClear": {
+      "count": 1025,
+      "mean": 9.35,
+      "median": 9
+    },
+    "portalTransfersPerGame": 34.34
+  },
+  {
+    "cap": 40,
+    "games": 2000,
+    "winRate": 0.7595,
+    "jar2": {
+      "count": 1998,
+      "mean": 15.83,
+      "median": 15
+    },
+    "honeyClear": {
+      "count": 1520,
+      "mean": 15.56,
+      "median": 13
+    },
+    "portalTransfersPerGame": 43.72
+  }
+]

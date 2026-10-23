@@ -1,0 +1,137 @@
+{
+  "level": 63,
+  "levelTitle": "Lv63 情绪释放关",
+  "bot": "random",
+  "games": 2000,
+  "seedBase": 1042,
+  "mixedRate": 0.5,
+  "cap": null,
+  "winRate": 0.7725,
+  "wins": 1545,
+  "losses": 455,
+  "errors": 0,
+  "stepsUsed": {
+    "mean": 15.152,
+    "median": 15,
+    "p15": 7,
+    "p85": 24,
+    "min": 1,
+    "max": 24,
+    "histogram": {
+      "1": 4,
+      "2": 29,
+      "3": 43,
+      "4": 59,
+      "5": 71,
+      "6": 81,
+      "7": 84,
+      "8": 83,
+      "9": 97,
+      "10": 86,
+      "11": 87,
+      "12": 88,
+      "13": 83,
+      "14": 73,
+      "15": 74,
+      "16": 69,
+      "17": 63,
+      "18": 61,
+      "19": 53,
+      "20": 58,
+      "21": 57,
+      "22": 48,
+      "23": 41,
+      "24": 508
+    }
+  },
+  "remainingMovesOnWin": {
+    "mean": 11.453,
+    "median": 12,
+    "p15": 4,
+    "p85": 18,
+    "min": 0,
+    "max": 23,
+    "histogram": {
+      "0": 53,
+      "1": 41,
+      "2": 48,
+      "3": 57,
+      "4": 58,
+      "5": 53,
+      "6": 61,
+      "7": 63,
+      "8": 69,
+      "9": 74,
+      "10": 73,
+      "11": 83,
+      "12": 88,
+      "13": 87,
+      "14": 86,
+      "15": 97,
+      "16": 83,
+      "17": 84,
+      "18": 81,
+      "19": 71,
+      "20": 59,
+      "21": 43,
+      "22": 29,
+      "23": 4
+    }
+  },
+  "cascade": {
+    "totalSteps": 30305,
+    "multiCascadeSteps": 18500,
+    "rate": 0.6104603200791948
+  },
+  "shuffles": {
+    "total": 0,
+    "avgPerGame": 0,
+    "gamesWithShuffle": 0
+  },
+  "fuses": {
+    "total": 0,
+    "games": 0
+  },
+  "resolution": {
+    "total": 3640,
+    "single": 3283,
+    "dual": 357,
+    "totalActivationEvents": 3997,
+    "resonanceResolutions": 357,
+    "resonanceActivationEvents": 714,
+    "resonanceGameRate": 0.1785,
+    "resonanceActivationShare": 0.1786339754816112
+  },
+  "activationOrder": {
+    "singleA": 1643,
+    "singleB": 1640,
+    "dual": 714,
+    "other": 0
+  },
+  "firstResolution": {
+    "A": 1233,
+    "B": 410,
+    "dual": 357,
+    "none": 0
+  },
+  "lv63": {
+    "resonance": {
+      "games": 357,
+      "totalResolutions": 3640,
+      "gameRate": 0.1785,
+      "activationShare": 0.1786339754816112
+    },
+    "activationOrder": {
+      "singleA": 1643,
+      "singleB": 1640,
+      "dual": 714,
+      "other": 0
+    },
+    "firstResolution": {
+      "A": 1233,
+      "B": 410,
+      "dual": 357,
+      "none": 0
+    }
+  }
+}

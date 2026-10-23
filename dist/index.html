@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>三消关卡系统设计作品集 Demo (Lv62-Lv64)</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/board.css">
+</head>
+<body>
+
+  <!-- 顶部主标题 -->
+  <header class="header-container">
+    <h1>三消关卡系统设计 · 在线验证 Demo</h1>
+    <div class="subtitle">游戏策划求职作品集原型 | 章节锯齿心流实战 (Lv62—Lv64)</div>
+  </header>
+
+  <!-- 章节关卡切换器 (第二阶段起激活单关加载) -->
+  <nav class="level-nav">
+    <button class="level-btn active" id="btn-lvl-engine" title="第一阶段：通用核心引擎基准验证">引擎基准</button>
+    <button class="level-btn" id="btn-lvl-62" title="Lv62 机制引入关 (固定种子 #1042 / 零弹窗引导)">Lv62 引入</button>
+    <button class="level-btn" id="btn-lvl-63" title="Lv63 情绪释放关 (双罐共鸣 / 24步 / 果冻×16)">Lv63 释放</button>
+    <button class="level-btn" id="btn-lvl-64" title="Lv64 卡点关 (双岛 / 传送门 / 蜂蜜 / 19步)">Lv64 挑战</button>
+  </nav>
+
+  <!-- 关卡设计意图横幅 -->
+  <div class="spec-banner" id="spec-banner">
+    <div class="spec-text">
+      <strong>Lv62 机制引入关（原案确定性引导）</strong><br>
+      目标：激活果酱罐 × 1 | 步数：22步 | 种子：Seed #1042<br>
+      <span style="color:#f59e0b;">💡 唯一首步指引：点击交换 (1,4) 与 (2,4) 消除红心，罐体充能并腾跃至右下安全落点！</span>
+    </div>
+    <span class="tag">Lv62 已激活</span>
+  </div>
+
+  <!-- HUD 仪表盘 -->
+  <section class="hud-panel">
+    <div class="hud-item hud-moves">
+      <span class="hud-label">剩余步数</span>
+      <span class="hud-value" id="hud-moves">20</span>
+    </div>
+    <div class="hud-item hud-targets">
+      <span class="hud-label">关卡目标</span>
+      <span class="hud-value" id="hud-targets">0 / 15</span>
+      <span class="hud-sub" id="hud-target-label"></span>
+    </div>
+    <div class="hud-item hud-score">
+      <span class="hud-label">消除得分</span>
+      <span class="hud-value" id="hud-score">0</span>
+    </div>
+  </section>
+
+  <!-- 棋盘主舞台 -->
+  <main class="board-wrapper">
+    <div class="board-grid" id="board-grid"></div>
+  </main>
+
+  <!-- 底部控制按钮 -->
+  <footer class="controls-bar">
+    <button class="ctrl-btn" id="btn-reset">🔄 重新开始</button>
+    <button class="ctrl-btn" id="btn-sound">🔊 音效: 开</button>
+  </footer>
+
+  <!-- 胜利/失败模态弹窗 -->
+  <div class="modal-overlay hidden" id="game-over-modal">
+    <div class="modal-box">
+      <div class="modal-title" id="modal-title">关卡结算</div>
+      <div class="modal-desc" id="modal-desc">详细结算说明文本</div>
+      <button class="modal-btn" id="modal-restart-btn">再次挑战</button>
+    </div>
+  </div>
+
+  <!-- 首次进入试玩说明（最多 3 行，可关闭） -->
+  <div class="intro-overlay hidden" id="intro-overlay">
+    <div class="intro-card">
+      <h2>三消关卡 Demo · 试玩说明</h2>
+      <p>1. 点击相邻两颗棋子交换，凑成三消即可消除。</p>
+      <p>2. 罐子充能后爆浆；Lv63 双罐共鸣，Lv64 用传送门与蜂蜜。</p>
+      <p>3. 手机竖屏可直接玩，首次触摸后开启音效。</p>
+      <div class="intro-actions">
+        <button class="modal-btn" id="intro-dismiss">开始试玩</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

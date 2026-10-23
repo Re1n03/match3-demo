@@ -1,0 +1,39 @@
+{
+  "games": 2000,
+  "bot": "greedy",
+  "cap": 40,
+  "honeyDamageAdjacency": "diagonal",
+  "stuckGames": 512,
+  "stuckRate": 0.256,
+  "remainingDistribution": {
+    "6,6": 0,
+    "6,7": 0,
+    "7,6": 512,
+    "7,7": 512
+  },
+  "remainingDistributionRate": {
+    "6,6": 0,
+    "6,7": 0,
+    "7,6": 1,
+    "7,7": 1
+  },
+  "remainingPairDistribution": {
+    "7,6+7,7": 512
+  },
+  "gamesWithJarCompleted": 512,
+  "phaseMoves": 19456,
+  "avgPhaseMoves": 38,
+  "categoryCounts": {
+    "honey-adjacent": 512,
+    "jar-adjacent": 2237,
+    "generic": 16707
+  },
+  "noHoneyProgressMoves": 18944,
+  "noHoneyProgressRate": 0.9736842105263158,
+  "honeyDamagedButNotDestroyedMoves": 512,
+  "honeyDamagedButNotDestroyedRate": 0.02631578947368421,
+  "repeatedSwapEvents": 7319,
+  "gamesWithRepeat": 512,
+  "gamesWithRepeatRate": 1,
+  "maxRepeatInGame": 7
+}

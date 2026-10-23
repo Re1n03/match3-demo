@@ -1,0 +1,445 @@
+/* board.css - 棋盘容器、棋子动效与反馈视觉 */
+
+.board-wrapper {
+  width: 100%;
+  max-width: var(--board-max-size);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board-grid {
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 6px;
+  gap: 4px;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5), 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* 输入锁：防止并发点击打乱状态 */
+.board-grid.input-locked {
+  pointer-events: none;
+  cursor: wait;
+}
+
+/* 单个格子槽位 */
+.board-cell {
+  position: relative;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s, background-color 0.15s;
+}
+
+.board-cell:hover:not(.cell-void) {
+  background: rgba(51, 65, 85, 0.8);
+}
+
+/* 物理镂空格 (Lv64 双岛拓扑专用) */
+.board-cell.cell-void {
+  background: transparent !important;
+  cursor: default;
+  pointer-events: none;
+  border: none;
+}
+
+/* 选中高亮状态 */
+.board-cell.selected {
+  outline: 2px solid var(--accent-gold);
+  background: rgba(245, 158, 11, 0.25);
+  transform: scale(0.96);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+  z-index: 2;
+}
+
+/* 棋子主体 */
+.tile {
+  width: 86%;
+  height: 86%;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 1;
+}
+
+/* 棋子配色系统 */
+.tile-red {
+  background: linear-gradient(135deg, #f87171, #dc2626);
+  color: #fff;
+  border: 1px solid #fca5a5;
+}
+
+.tile-blue {
+  background: linear-gradient(135deg, #38bdf8, #0284c7);
+  color: #fff;
+  border: 1px solid #7dd3fc;
+}
+
+.tile-green {
+  background: linear-gradient(135deg, #4ade80, #16a34a);
+  color: #fff;
+  border: 1px solid #86efac;
+}
+
+.tile-yellow {
+  background: linear-gradient(135deg, #fde047, #ca8a04);
+  color: #422006;
+  border: 1px solid #fef08a;
+}
+
+.tile-purple {
+  background: linear-gradient(135deg, #c084fc, #9333ea);
+  color: #fff;
+  border: 1px solid #d8b4fe;
+}
+
+/* 果酱罐实体专属样式 (Lv62 核心机制) */
+.tile-jar {
+  background: linear-gradient(135deg, #f59e0b, #b45309) !important;
+  border: 2px solid #fde68a !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6) !important;
+  color: #fff;
+  position: relative;
+}
+
+.jar-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fbbf24;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 4px;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+/* 罐体满载微震蓄力动效 (Juice 视听) */
+@keyframes jarVibrate {
+  0%, 100% { transform: scale(1) translate(0); }
+  20% { transform: scale(1.06) translate(-2px, 1px); }
+  40% { transform: scale(1.06) translate(2px, -1px); }
+  60% { transform: scale(1.08) translate(-1px, -2px); }
+  80% { transform: scale(1.06) translate(1px, 2px); }
+}
+
+.tile-jar.jar-active {
+  animation: jarVibrate 0.15s infinite;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.95), inset 0 0 8px #fef08a !important;
+  z-index: 10;
+}
+
+/* 果酱罐腾跃空投弧线动效 */
+@keyframes jarArcLeap {
+  0% { transform: scale(1); z-index: 20; }
+  40% { transform: scale(1.35) translateY(-20px); box-shadow: 0 15px 25px rgba(245, 158, 11, 0.8); z-index: 20; }
+  100% { transform: scale(1); z-index: 20; }
+}
+
+.tile-jar.jar-leaping {
+  animation: jarArcLeap 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  z-index: 20 !important;
+}
+
+/* 果酱爆破着陆冲击动效 (BURST & SPLASH) */
+@keyframes blastSplashAnim {
+  0% { transform: scale(0.6); opacity: 1; background-color: rgba(245, 158, 11, 0.9); }
+  50% { transform: scale(1.3); opacity: 0.85; background-color: rgba(251, 191, 36, 0.95); box-shadow: 0 0 15px #f59e0b; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+.cell-burst-splash {
+  position: absolute;
+  inset: -2px;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 15;
+  animation: blastSplashAnim 0.35s ease-out forwards;
+}
+
+/* 屏幕/棋盘顿帧微震动效 (0.1s 顿帧打击感) */
+@keyframes boardShake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-3px, 2px); }
+  50% { transform: translate(3px, -2px); }
+  75% { transform: translate(-2px, -1px); }
+}
+
+.board-shaking {
+  animation: boardShake 0.16s ease-in-out;
+}
+
+/* 首步引导虚线框提示 (仅视觉指引，不破坏核心操作) */
+.cell-guide-hint {
+  outline: 2px dashed #f59e0b;
+  outline-offset: -3px;
+  animation: guidePulse 1.5s infinite;
+}
+
+@keyframes guidePulse {
+  0%, 100% { outline-color: rgba(245, 158, 11, 0.4); }
+  50% { outline-color: rgba(245, 158, 11, 1); }
+}
+
+/* 果冻底衬 (Lv63 专属) */
+.underlay {
+  position: absolute;
+  inset: 2px;
+  border-radius: 4px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.underlay-jelly {
+  background: rgba(244, 114, 182, 0.35);
+  border: 1px dashed #f472b6;
+  box-shadow: inset 0 0 8px rgba(244, 114, 182, 0.5);
+}
+
+/* 实体障碍物 (Lv64 蜂蜜专属) */
+.obstacle {
+  position: absolute;
+  inset: 2px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #fff;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.obstacle-honey {
+  background: rgba(217, 119, 6, 0.88);
+  border: 2px solid #fbbf24;
+  box-shadow: inset 0 0 10px rgba(180, 83, 9, 0.9);
+}
+
+/* Juice 动效 1: 无效交换回弹摇晃 (Shake) */
+@keyframes shakeRollback {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px) rotate(-3deg); }
+  75% { transform: translateX(4px) rotate(3deg); }
+}
+
+.shake-rollback {
+  animation: shakeRollback 0.25s ease-in-out;
+}
+
+/* Juice 动效 2: 消除爆炸渐隐 (Pop) */
+@keyframes tilePop {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.8; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+.tile-popping {
+  animation: tilePop 0.18s ease-out forwards;
+}
+
+/* 双罐共鸣：重叠格 200% 震波闪光（仅视觉，不改变爆浆范围） */
+@keyframes resonanceFlash {
+  0% { opacity: 0; transform: scale(0.6); }
+  35% { opacity: 1; transform: scale(1.15); }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+
+.board-cell.cell-resonance-flash::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 25;
+  background: radial-gradient(circle, rgba(250, 204, 21, 0.95) 0%, rgba(245, 158, 11, 0.45) 55%, transparent 75%);
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.95);
+  animation: resonanceFlash 0.6s ease-out forwards;
+}
+
+/* 实体障碍物 HP 徽标（蜂蜜等始终显示剩余 HP） */
+.obstacle-honey {
+  background: rgba(217, 119, 6, 0.92);
+  border: 2px solid #fbbf24;
+  box-shadow: inset 0 0 10px rgba(180, 83, 9, 0.9);
+  color: #fff7ed;
+  font-size: 0.68rem;
+  letter-spacing: 0.2px;
+}
+
+/* 果冻底衬、岛屿与 VOID 的视觉区分 */
+.board-cell.cell-island-left {
+  background: rgba(14, 116, 144, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(34, 211, 238, 0.14);
+}
+
+.board-cell.cell-island-right {
+  background: rgba(126, 34, 206, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(192, 132, 252, 0.16);
+}
+
+.board-cell.cell-honey {
+  background: rgba(180, 83, 9, 0.22);
+}
+
+/* 传送门入口 / 出口标记与配对色 */
+.board-cell.cell-portal-entry,
+.board-cell.cell-portal-exit {
+  box-shadow: inset 0 0 0 2px rgba(168, 85, 247, 0.8);
+}
+
+.board-cell.portal-pair-1 {
+  --portal-color: #c084fc;
+}
+
+.board-cell.portal-pair-2 {
+  --portal-color: #22d3ee;
+}
+
+.portal-marker {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  z-index: 8;
+  padding: 1px 4px;
+  border-radius: 999px;
+  font-size: 0.56rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #0f172a;
+  background: var(--portal-color, #c084fc);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.portal-marker-exit {
+  top: auto;
+  bottom: 1px;
+}
+
+/* 罐子充能条：在 2/3 数字徽标之外提供可视进度 */
+.jar-progress {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 2px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.7);
+  overflow: hidden;
+  z-index: 4;
+}
+
+.jar-progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #fbbf24, #f97316);
+  transition: width 0.18s ease;
+}
+
+/* 爆浆着陆 100ms 顿帧：仅暂停 CSS 动画与输入，不暂停引擎结算 */
+.board-grid.board-hitstop {
+  pointer-events: none;
+  animation-play-state: paused !important;
+}
+
+.board-grid.board-hitstop *,
+.board-grid.board-hitstop *::before,
+.board-grid.board-hitstop *::after {
+  animation-play-state: paused !important;
+}
+
+/* 满载溢出气泡：ACTIVE 罐体持续上浮，纯 CSS 演出 */
+.jar-bubbles {
+  position: absolute;
+  inset: 2px;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.jar-bubble {
+  position: absolute;
+  bottom: 8%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 247, 214, 0.9);
+  border: 1px solid rgba(251, 191, 36, 0.9);
+  box-shadow: 0 0 4px rgba(251, 191, 36, 0.8);
+  animation: jarBubbleFloat 1.15s ease-in infinite;
+}
+
+.jar-bubble-1 { left: 22%; animation-delay: 0s; }
+.jar-bubble-2 { left: 48%; width: 6px; height: 6px; animation-delay: 0.32s; }
+.jar-bubble-3 { left: 72%; animation-delay: 0.64s; }
+
+@keyframes jarBubbleFloat {
+  0% { transform: translateY(0) scale(0.7); opacity: 0; }
+  15% { opacity: 0.95; }
+  70% { opacity: 0.75; }
+  100% { transform: translateY(-26px) scale(1.1); opacity: 0; }
+}
+
+/* 手机竖屏适配 */
+@media (max-width: 480px) {
+  :root {
+    --board-max-size: 96vw;
+  }
+  .tile {
+    font-size: 1rem;
+  }
+  .hud-value {
+    font-size: 1.1rem;
+  }
+  .board-grid {
+    padding: 3px;
+    gap: 2px;
+    border-width: 1px;
+    border-radius: 10px;
+  }
+  .board-cell {
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 4px;
+  }
+  .board-cell.cell-portal-entry,
+  .board-cell.cell-portal-exit {
+    box-shadow: inset 0 0 0 1.5px rgba(168, 85, 247, 0.9);
+  }
+  .portal-marker {
+    font-size: 0.5rem;
+    padding: 0 3px;
+  }
+  .jar-badge {
+    font-size: 0.56rem;
+    padding: 0 3px;
+  }
+  .jar-progress {
+    height: 3px;
+  }
+  .obstacle-honey {
+    font-size: 0.58rem;
+  }
+  .underlay-jelly {
+    inset: 1px;
+  }
+}

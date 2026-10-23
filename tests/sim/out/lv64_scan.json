@@ -1,0 +1,112 @@
+[
+  {
+    "id": "A_base_orth0",
+    "desc": "boardA · charge0 · 蜂蜜正交",
+    "win19": 0.3055,
+    "win40": 0.5755,
+    "required": {
+      "mean": 20.15,
+      "median": 19,
+      "p15": 12,
+      "p85": 29,
+      "min": 5,
+      "max": 40
+    },
+    "target": {
+      "win40": false,
+      "median": true,
+      "p15": false,
+      "p85": false,
+      "win19": false,
+      "count": 1
+    }
+  },
+  {
+    "id": "B_diag0",
+    "desc": "boardA · charge0 · 蜂蜜含斜向",
+    "win19": 0.3725,
+    "win40": 0.735,
+    "required": {
+      "mean": 20.83,
+      "median": 19,
+      "p15": 13,
+      "p85": 30,
+      "min": 6,
+      "max": 40
+    },
+    "target": {
+      "win40": false,
+      "median": true,
+      "p15": false,
+      "p85": false,
+      "win19": true,
+      "count": 2
+    }
+  },
+  {
+    "id": "C_diag1",
+    "desc": "boardA · charge1 · 蜂蜜含斜向",
+    "win19": 0.398,
+    "win40": 0.7305,
+    "required": {
+      "mean": 20.03,
+      "median": 18,
+      "p15": 12,
+      "p85": 29,
+      "min": 4,
+      "max": 40
+    },
+    "target": {
+      "win40": false,
+      "median": false,
+      "p15": false,
+      "p85": false,
+      "win19": true,
+      "count": 1
+    }
+  },
+  {
+    "id": "D_boardD_diag0",
+    "desc": "boardD(3个蜂蜜邻接起手) · charge0 · 蜂蜜含斜向",
+    "win19": 0.112,
+    "win40": 0.475,
+    "required": {
+      "mean": 26.06,
+      "median": 26,
+      "p15": 17,
+      "p85": 35,
+      "min": 7,
+      "max": 40
+    },
+    "target": {
+      "win40": false,
+      "median": false,
+      "p15": true,
+      "p85": false,
+      "win19": false,
+      "count": 1
+    }
+  },
+  {
+    "id": "E_base_diag2",
+    "desc": "boardA · charge2 · 蜂蜜含斜向",
+    "win19": 0.453,
+    "win40": 0.7565,
+    "required": {
+      "mean": 18.89,
+      "median": 18,
+      "p15": 11,
+      "p85": 29,
+      "min": 3,
+      "max": 40
+    },
+    "target": {
+      "win40": false,
+      "median": false,
+      "p15": false,
+      "p85": false,
+      "win19": true,
+      "count": 1
+    }
+  }
+]

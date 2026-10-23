@@ -1,0 +1,98 @@
+{
+  "level": 64,
+  "levelTitle": "Lv64 卡点关",
+  "bot": "mixed",
+  "games": 2000,
+  "seedBase": 1042,
+  "mixedRate": 0.5,
+  "cap": null,
+  "winRate": 0.392,
+  "wins": 784,
+  "losses": 1216,
+  "errors": 0,
+  "stepsUsed": {
+    "mean": 17.265,
+    "median": 19,
+    "p15": 14,
+    "p85": 19,
+    "min": 6,
+    "max": 19,
+    "histogram": {
+      "6": 5,
+      "7": 12,
+      "8": 16,
+      "9": 36,
+      "10": 29,
+      "11": 40,
+      "12": 59,
+      "13": 78,
+      "14": 72,
+      "15": 90,
+      "16": 102,
+      "17": 76,
+      "18": 86,
+      "19": 1299
+    }
+  },
+  "remainingMovesOnWin": {
+    "mean": 4.427,
+    "median": 4,
+    "p15": 1,
+    "p85": 8,
+    "min": 0,
+    "max": 13,
+    "histogram": {
+      "0": 83,
+      "1": 86,
+      "2": 76,
+      "3": 102,
+      "4": 90,
+      "5": 72,
+      "6": 78,
+      "7": 59,
+      "8": 40,
+      "9": 29,
+      "10": 36,
+      "11": 16,
+      "12": 12,
+      "13": 5
+    }
+  },
+  "cascade": {
+    "totalSteps": 34529,
+    "multiCascadeSteps": 11513,
+    "rate": 0.333429870543601
+  },
+  "shuffles": {
+    "total": 205,
+    "avgPerGame": 0.1025,
+    "gamesWithShuffle": 191
+  },
+  "fuses": {
+    "total": 0,
+    "games": 0
+  },
+  "resolution": {
+    "total": 3550,
+    "single": 3550,
+    "dual": 0,
+    "totalActivationEvents": 3550,
+    "resonanceResolutions": 0,
+    "resonanceActivationEvents": 0,
+    "resonanceGameRate": 0,
+    "resonanceActivationShare": 0
+  },
+  "activationOrder": {
+    "singleA": 0,
+    "singleB": 0,
+    "dual": 0,
+    "other": 3550
+  },
+  "firstResolution": {
+    "A": 0,
+    "B": 0,
+    "dual": 0,
+    "none": 2000
+  },
+  "lv63": null
+}

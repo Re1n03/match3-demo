@@ -1,0 +1,6 @@
+id,winRate,remainingMedian,remainingP15,remainingP85,stepsMedian,cascadeRate,resonanceGameRate,resonanceActivationShare,targetMet
+A_baseline,0.9940,18,14,20,6,0.7111,0.1990,0.1990,2
+B_charge8,0.9935,18,15,21,6,0.7144,0.4790,0.4790,2
+C_charge8_cap1,0.9920,17,14,19,7,0.7235,0.4520,0.4520,2
+D_charge8_cap1_3x3,0.9915,18,15,20,6,0.7316,0.4520,0.4520,2
+E_charge8_cap1_3x3_boardB,0.9920,17,13,19,7,0.7200,0.1810,0.1810,2

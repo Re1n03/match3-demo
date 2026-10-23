@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Lv62 输入锁 / 横幅 / 关卡切换 · E2E 验收</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/board.css">
+  <style>
+    #e2e-shell { width: 100%; max-width: 720px; margin: 0 auto 8px; font-family: -apple-system, "Segoe UI", sans-serif; }
+    #e2e-shell h1 { font-size: 1.05rem; color: #38bdf8; }
+    #results { list-style: none; padding: 0; margin: 8px 0; width: 100%; }
+    #results li { padding: 6px 10px; margin: 4px 0; border-radius: 4px; font-size: 0.82rem; background: #1e293b; color: #e2e8f0; }
+    #results li.pass { border-left: 4px solid #10b981; }
+    #results li.fail { border-left: 4px solid #ef4444; color: #fca5a5; }
+    #summary { font-weight: bold; }
+    #summary.pass { color: #10b981; }
+    #summary.fail { color: #ef4444; }
+    #e2e-json { display: none; }
+  </style>
+</head>
+<body>
+  <div id="e2e-shell">
+    <h1>Lv62 E2E：结算后重开 / 切关 / 失败路径 / 横幅 / 禁用按钮</h1>
+    <div id="summary">准备运行（需以 ?e2e=1 打开）...</div>
+    <ul id="results"></ul>
+    <pre id="e2e-json"></pre>
+  </div>
+  <div id="app-root"></div>
+
+  <script type="module">
+    // 真实 main.js + 真实 index.html DOM；同步注入避免 iframe/virtual-time 竞态。
+    import '../js/main.js';
+    import { MatchFinder } from '../js/engine/MatchFinder.js';
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '../index.html', false);
+    xhr.send(null);
+    const srcDoc = new DOMParser().parseFromString(xhr.responseText, 'text/html');
+    document.getElementById('app-root').innerHTML = srcDoc.body.innerHTML;
+
+    const results = [];
+    const listEl = document.getElementById('results');
+
+    function check(name, pass, detail = '') {
+      results.push({ name, pass: !!pass, detail });
+      const li = document.createElement('li');
+      li.className = pass ? 'pass' : 'fail';
+      li.textContent = `[${pass ? 'PASS' : 'FAIL'}] ${name}${detail ? ' — ' + detail : ''}`;
+      listEl.appendChild(li);
+    }
+
+    function finish() {
+      const passCount = results.filter(r => r.pass).length;
+      const failCount = results.length - passCount;
+      document.getElementById('summary').textContent =
+        `共 ${results.length} 项：${passCount} PASS / ${failCount} FAIL`;
+      document.getElementById('summary').className = failCount === 0 ? 'pass' : 'fail';
+      document.getElementById('e2e-json').textContent = JSON.stringify({ results, passCount, failCount });
+      document.body.dataset.e2eDone = 'true';
+    }
+
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    async function waitFor(fn, timeout = 12000, step = 100) {
+      const t0 = Date.now();
+      while (Date.now() - t0 < timeout) {
+        try { const v = fn(); if (v) return v; } catch (e) { /* DOM 尚未就绪 */ }
+        await sleep(step);
+      }
+      return null;
+    }
+
+    async function run() {
+      try {
+        await waitFor(() => document.querySelectorAll('.board-cell').length > 0);
+        await waitFor(() => window.__demoE2E && window.__demoE2E.getEngine());
+        if (!window.__demoE2E) throw new Error('缺少 ?e2e=1 测试句柄（请以 tests/e2e.html?e2e=1 打开）');
+        if (window.__demoE2E.dismissIntro) window.__demoE2E.dismissIntro();
+
+        const engine = () => window.__demoE2E.getEngine();
+        const ui = {
+          cells: () => document.querySelectorAll('.board-cell').length,
+          tiles: () => document.querySelectorAll('.tile').length,
+          moves: () => document.getElementById('hud-moves').textContent.trim(),
+          target: () => document.getElementById('hud-targets').textContent.trim(),
+          activeNav: () => document.querySelector('.level-btn.active')?.id,
+          banner: () => document.getElementById('spec-banner').textContent.replace(/\s+/g, ' ').trim(),
+          locked: () => document.getElementById('board-grid').classList.contains('input-locked'),
+          modalOpen: () => !document.getElementById('game-over-modal').classList.contains('hidden'),
+          modalTitle: () => document.getElementById('modal-title').textContent.trim(),
+          jarBadges: () => Array.from(document.querySelectorAll('.tile-jar .jar-badge')).map(e => e.textContent).join('|'),
+          jarCells: () => Array.from(document.querySelectorAll('.tile-jar')).map(e => {
+            const p = e.closest('.board-cell'); return `(${p.dataset.row},${p.dataset.col})`;
+          }).join('|'),
+          jellyUnderlays: () => document.querySelectorAll('.underlay-jelly').length,
+          honeyObstacles: () => document.querySelectorAll('.obstacle-honey').length,
+          honeyHp: () => [...document.querySelectorAll('.obstacle-honey')].map(e => e.textContent.trim()).join('|'),
+          portalEntries: () => document.querySelectorAll('.cell-portal-entry').length,
+          portalExits: () => document.querySelectorAll('.cell-portal-exit').length,
+          portalMarkers: () => [...document.querySelectorAll('.portal-marker')].map(e => e.textContent).join('|'),
+          jarProgress: () => document.querySelectorAll('.jar-progress').length,
+          targetLabel: () => document.getElementById('hud-target-label')?.textContent.trim() || '',
+          voidCells: () => document.querySelectorAll('.cell-void').length
+        };
+        const cellEl = (r, c) => document.querySelector(`.board-cell[data-row="${r}"][data-col="${c}"]`);
+        const clickCell = async (r, c) => {
+          const el = cellEl(r, c);
+          if (!el) throw new Error(`找不到格子 (${r},${c})`);
+          el.click();
+          await sleep(60);
+        };
+        const waitIdle = () => waitFor(() => engine() && engine().state === 'IDLE', 12000);
+        const swap = async (a, b) => {
+          await clickCell(a[0], a[1]);
+          await clickCell(b[0], b[1]);
+          await waitFor(() => engine().state !== 'IDLE', 4000);
+          await waitIdle();
+        };
+        const restartModal = async (expectedMoves) => {
+          document.getElementById('modal-restart-btn').click();
+          await waitFor(() => !ui.modalOpen() && ui.moves() === String(expectedMoves), 5000);
+          await sleep(150);
+        };
+        // 通过“选中/取消选中”验证棋盘输入是否真正解锁，不触发交换
+        const proveInteractive = async () => {
+          const el = cellEl(0, 0);
+          if (!el) return false;
+          el.click();
+          await sleep(80);
+          const selected = el.classList.contains('selected');
+          el.click();
+          await sleep(80);
+          return selected && !el.classList.contains('selected');
+        };
+        const boardSize = () => engine().rows * engine().cols;
+
+        // ---------- 初始状态 ----------
+        check('初始棋盘尺寸与关卡配置一致', ui.cells() === boardSize() && ui.tiles() === boardSize(),
+          `cells=${ui.cells()} tiles=${ui.tiles()} expected=${boardSize()}`);
+        check('初始横幅与 Lv62 一致', ui.activeNav() === 'btn-lvl-62' && ui.banner().includes('Lv62'), ui.banner().slice(0, 40));
+        check('初始罐体充能 2/3', ui.jarBadges() === '2/3', `badge=${ui.jarBadges()}`);
+        check('Lv62 HUD 单目标显示目标名', ui.target() === '0 / 1' && ui.targetLabel().includes('激活'),
+          `target=${ui.target()}, label=${ui.targetLabel()}`);
+        check('初始棋盘可交互', !ui.locked() && await proveInteractive());
+        check('Lv63/Lv64 按钮均已启用',
+          document.getElementById('btn-lvl-63').disabled === false && document.getElementById('btn-lvl-64').disabled === false,
+          `63.disabled=${document.getElementById('btn-lvl-63').disabled}, 64.disabled=${document.getElementById('btn-lvl-64').disabled}`);
+
+        // ---------- 唯一首步通关 -> 再次挑战 ----------
+        await swap([3, 1], [3, 2]);
+        await waitFor(() => ui.modalOpen(), 10000);
+        check('唯一首步直接满充起跳并通关', ui.modalOpen() && ui.modalTitle().includes('成功'), ui.modalTitle());
+        check('通关时步数 22->21', ui.moves() === '21', `moves=${ui.moves()}`);
+        check('通关时目标 1/1', ui.target() === '1 / 1', ui.target());
+        check('通关时罐体停在安全落点 (5,6)', ui.jarCells() === '(5,6)', `jarCells=${ui.jarCells()}`);
+
+        await restartModal(22);
+        check('通关后“再次挑战”解除输入锁', !ui.locked(), `class=${document.getElementById('board-grid').className}`);
+        check('再次挑战后数据复位', ui.target() === '0 / 1' && ui.jarBadges() === '2/3' && ui.jarCells() === '(3,3)',
+          `target=${ui.target()} badge=${ui.jarBadges()} jar=${ui.jarCells()}`);
+        check('通关后“再次挑战”仍可继续点击', await proveInteractive());
+
+        // 通关后切关
+        document.getElementById('btn-reset').click();
+        await waitFor(() => ui.moves() === '22', 4000);
+        document.getElementById('btn-lvl-engine').click();
+        await waitFor(() => ui.activeNav() === 'btn-lvl-engine' && ui.moves() === '20', 5000);
+        check('切到引擎基准后不锁输入且横幅正确',
+          !ui.locked() && ui.banner().includes('通用核心引擎基准') && await proveInteractive(),
+          `banner=${ui.banner().slice(0, 30)}`);
+        document.getElementById('btn-lvl-62').click();
+        await waitFor(() => ui.activeNav() === 'btn-lvl-62' && ui.moves() === '22', 5000);
+        check('切回 Lv62 后不锁输入且横幅正确',
+          !ui.locked() && ui.banner().includes('Lv62') && await proveInteractive(),
+          `banner=${ui.banner().slice(0, 30)}`);
+
+        // ---------- Lv63：启用按钮与双目标/双罐/果冻初始化 ----------
+        document.getElementById('btn-lvl-63').click();
+        await waitFor(() => ui.activeNav() === 'btn-lvl-63' && ui.moves() === '24', 5000);
+        check('Lv63 可加载且棋盘 8x8', ui.cells() === boardSize() && ui.tiles() === boardSize(), `cells=${ui.cells()}`);
+        check('Lv63 横幅与双目标 HUD 正确',
+          ui.banner().includes('Lv63') && ui.target().includes('激活罐子') && ui.target().includes('清除果冻') &&
+            ui.target().includes('0/2') && ui.target().includes('0/16'),
+          `target=${ui.target()}`);
+        check('Lv63 双罐位置按 PDF (4,3)/(4,5)', ui.jarCells() === '(4,3)|(4,5)', `jarCells=${ui.jarCells()}`);
+        check('Lv63 果冻底衬 16 格', ui.jellyUnderlays() === 16, `jelly=${ui.jellyUnderlays()}`);
+        check('Lv63 罐子充能进度条可见', ui.jarProgress() === 2, `jarProgress=${ui.jarProgress()}`);
+        check('Lv63 棋盘可交互', !ui.locked() && await proveInteractive());
+
+        // ---------- Lv64：双岛 / 传送门 / 蜂蜜，并实际点击玩到结算 ----------
+        document.getElementById('btn-lvl-64').click();
+        await waitFor(() => ui.activeNav() === 'btn-lvl-64' && ui.moves() === '19', 5000);
+        check('Lv64 可加载且为 8x8 双岛', ui.cells() === boardSize() && ui.voidCells() === 16,
+          `cells=${ui.cells()}, voids=${ui.voidCells()}`);
+        check('Lv64 横幅与双目标 HUD 正确',
+          ui.banner().includes('Lv64') && ui.target().includes('消除蜂蜜') && ui.target().includes('激活罐子') &&
+            ui.target().includes('0/4') && ui.target().includes('0/2'),
+          `target=${ui.target()}`);
+        check('Lv64 罐子/蜂蜜初始位置与数量', ui.jarCells() === '(3,1)' && ui.honeyObstacles() === 4,
+          `jar=${ui.jarCells()}, honey=${ui.honeyObstacles()}`);
+        check('Lv64 蜂蜜显示剩余 HP', ui.honeyHp() === 'HP:2|HP:2|HP:2|HP:2', `hp=${ui.honeyHp()}`);
+        check('Lv64 传送门入口/出口可见且配对',
+          ui.portalEntries() === 2 && ui.portalExits() === 2 && ui.portalMarkers() === '入1|入2|出1|出2',
+          `entries=${ui.portalEntries()}, exits=${ui.portalExits()}, markers=${ui.portalMarkers()}`);
+        const portalPairs = engine().portalSystem && engine().portalSystem.pairs;
+        check('Lv64 传送门入口/出口配置',
+          portalPairs && portalPairs.length === 2 &&
+            portalPairs.some(p => p.exit.row === 7 && p.exit.col === 1 && p.entry.row === 0 && p.entry.col === 5) &&
+            portalPairs.some(p => p.exit.row === 7 && p.exit.col === 2 && p.entry.row === 0 && p.entry.col === 6),
+          JSON.stringify(portalPairs));
+        check('Lv64 棋盘可交互', !ui.locked() && await proveInteractive());
+
+        // 点击玩到结算（关闭动画延时加速；每一步使用合法交换）
+        engine().config = { ...engine().config, stepDelay: 0 };
+        let lv64MovesPlayed = 0;
+        while (lv64MovesPlayed < 19 && !ui.modalOpen()) {
+          let possible = MatchFinder.findPossibleMoves(engine().grid);
+          if (!possible.length) {
+            engine().resolveDeadlock();
+            possible = MatchFinder.findPossibleMoves(engine().grid);
+          }
+          if (!possible.length) break;
+          const move = possible[0];
+          await clickCell(move.posA.row, move.posA.col);
+          await clickCell(move.posB.row, move.posB.col);
+          await waitFor(() => engine().state !== 'IDLE' || ui.modalOpen(), 3000);
+          await waitFor(() => engine().state === 'IDLE' || ui.modalOpen(), 15000);
+          lv64MovesPlayed++;
+        }
+        const lv64ReachedEnd = await waitFor(() => ui.modalOpen(), 8000);
+        check('Lv64 可点击玩到结算', !!lv64ReachedEnd && (ui.modalTitle().includes('成功') || ui.modalTitle().includes('失败')),
+          `movesPlayed=${lv64MovesPlayed}, state=${engine().state}, title=${ui.modalTitle()}`);
+        if (ui.modalOpen()) {
+          document.getElementById('modal-restart-btn').click();
+          await waitFor(() => !ui.modalOpen() && ui.moves() === '19', 5000);
+        }
+
+        // ---------- 失败 -> 再次挑战 ----------
+        // Lv62 唯一首步会直接通关，因此切到引擎基准构造失败：1 步 + 不可达目标
+        document.getElementById('btn-lvl-engine').click();
+        await waitFor(() => ui.activeNav() === 'btn-lvl-engine' && ui.moves() === '20', 5000);
+        engine().movesRemaining = 1;
+        engine().activeTargets[0].count = 9999;
+        const moves = MatchFinder.findPossibleMoves(engine().grid);
+        if (!moves.length) throw new Error('引擎基准棋盘无合法交换，无法构造失败场景');
+        await clickCell(moves[0].posA.row, moves[0].posA.col);
+        await clickCell(moves[0].posB.row, moves[0].posB.col);
+        await waitFor(() => ui.modalOpen(), 10000);
+        check('步数耗尽出现失败弹窗', ui.modalOpen() && ui.modalTitle().includes('失败'), ui.modalTitle());
+        await restartModal(20);
+        check('失败后“再次挑战”解除输入锁', !ui.locked(), `class=${document.getElementById('board-grid').className}`);
+        check('失败后“再次挑战”仍可继续点击', await proveInteractive());
+
+        // 失败后切关回 Lv62
+        document.getElementById('btn-lvl-62').click();
+        await waitFor(() => ui.activeNav() === 'btn-lvl-62' && ui.moves() === '22', 5000);
+        check('失败后切换关卡解除输入锁且横幅正确',
+          !ui.locked() && ui.banner().includes('Lv62') && await proveInteractive(),
+          `banner=${ui.banner().slice(0, 30)}`);
+      } catch (e) {
+        check('E2E 执行异常', false, e && (e.stack || e.message));
+      } finally {
+        finish();
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>

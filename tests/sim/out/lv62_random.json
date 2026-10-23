@@ -1,0 +1,72 @@
+{
+  "level": 62,
+  "levelTitle": "Lv62 机制引入关",
+  "bot": "random",
+  "games": 2000,
+  "seedBase": 1042,
+  "mixedRate": 0.5,
+  "cap": null,
+  "winRate": 1,
+  "wins": 2000,
+  "losses": 0,
+  "errors": 0,
+  "stepsUsed": {
+    "mean": 1,
+    "median": 1,
+    "p15": 1,
+    "p85": 1,
+    "min": 1,
+    "max": 1,
+    "histogram": {
+      "1": 2000
+    }
+  },
+  "remainingMovesOnWin": {
+    "mean": 21,
+    "median": 21,
+    "p15": 21,
+    "p85": 21,
+    "min": 21,
+    "max": 21,
+    "histogram": {
+      "21": 2000
+    }
+  },
+  "cascade": {
+    "totalSteps": 2000,
+    "multiCascadeSteps": 2000,
+    "rate": 1
+  },
+  "shuffles": {
+    "total": 0,
+    "avgPerGame": 0,
+    "gamesWithShuffle": 0
+  },
+  "fuses": {
+    "total": 0,
+    "games": 0
+  },
+  "resolution": {
+    "total": 2000,
+    "single": 2000,
+    "dual": 0,
+    "totalActivationEvents": 2000,
+    "resonanceResolutions": 0,
+    "resonanceActivationEvents": 0,
+    "resonanceGameRate": 0,
+    "resonanceActivationShare": 0
+  },
+  "activationOrder": {
+    "singleA": 0,
+    "singleB": 0,
+    "dual": 0,
+    "other": 2000
+  },
+  "firstResolution": {
+    "A": 0,
+    "B": 0,
+    "dual": 0,
+    "none": 2000
+  },
+  "lv63": null
+}

@@ -1,0 +1,48 @@
+{
+  "games": 2000,
+  "bot": "mixed",
+  "cap": 40,
+  "gamesWith4": 1520,
+  "lastLocation": {
+    "6,6": 0,
+    "6,7": 0,
+    "7,6": 0,
+    "7,7": 1520
+  },
+  "lastLocationRate": {
+    "6,6": 0,
+    "6,7": 0,
+    "7,6": 0,
+    "7,7": 1
+  },
+  "sequences": {
+    "6,6>6,7>7,6>7,7": 1517,
+    "6,6>7,6>6,7>7,7": 3
+  },
+  "perCell": {
+    "6,6": {
+      "count": 1520,
+      "medianStep": 3,
+      "meanStep": 4.219736842105263,
+      "meanOrder": 1
+    },
+    "6,7": {
+      "count": 1520,
+      "medianStep": 3,
+      "meanStep": 4.2953947368421055,
+      "meanOrder": 2.0019736842105265
+    },
+    "7,6": {
+      "count": 1520,
+      "medianStep": 11,
+      "meanStep": 14.50592105263158,
+      "meanOrder": 2.9980263157894735
+    },
+    "7,7": {
+      "count": 1520,
+      "medianStep": 13,
+      "meanStep": 15.55657894736842,
+      "meanOrder": 4
+    }
+  }
+}

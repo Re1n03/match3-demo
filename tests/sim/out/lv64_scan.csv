@@ -1,0 +1,6 @@
+id,win19,win40,reqMean,reqMedian,reqP15,reqP85,targetMet,targetDetail
+A_base_orth0,0.3055,0.5755,20.15,19,12,29,1,{"win40":false;"median":true;"p15":false;"p85":false;"win19":false;"count":1}
+B_diag0,0.3725,0.7350,20.83,19,13,30,2,{"win40":false;"median":true;"p15":false;"p85":false;"win19":true;"count":2}
+C_diag1,0.3980,0.7305,20.03,18,12,29,1,{"win40":false;"median":false;"p15":false;"p85":false;"win19":true;"count":1}
+D_boardD_diag0,0.1120,0.4750,26.06,26,17,35,1,{"win40":false;"median":false;"p15":true;"p85":false;"win19":false;"count":1}
+E_base_diag2,0.4530,0.7565,18.89,18,11,29,1,{"win40":false;"median":false;"p15":false;"p85":false;"win19":true;"count":1}

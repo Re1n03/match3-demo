@@ -1,0 +1,4 @@
+bot,games,winRate,jar1Rate,jar2Rate,honey0,honey1,honey2,honey3,honey4,rightEmptyMean,rightEmptyMax,col7EmptyMean,col7EmptyMax,entryFeed0,entryFeed1,exitNoSupply,shuffleGames,shuffleEvents,shuffleLeftEmptyMean,shuffleRightEmptyMean
+random,2000,0.1155,1.0000,0.9470,365,512,583,296,244,0.95,1,0.95,1,29078,75944,65,1042,1300,0.00,1.00
+greedy,2000,0.8730,1.0000,1.0000,0,0,11,243,1746,1.00,1,1.00,1,17897,63675,105,345,372,0.00,1.00
+mixed,2000,0.5755,1.0000,0.9995,71,127,300,350,1152,0.99,1,0.99,1,25459,76346,103,688,813,0.00,1.00

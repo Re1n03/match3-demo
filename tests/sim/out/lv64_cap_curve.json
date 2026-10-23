@@ -1,0 +1,34 @@
+[
+  {
+    "cap": 19,
+    "wins": 784,
+    "winRate": 0.392,
+    "stepsMean": 17.265,
+    "stepsMedian": 19,
+    "remainingMedian": 4
+  },
+  {
+    "cap": 21,
+    "wins": 913,
+    "winRate": 0.4565,
+    "stepsMean": 18.448,
+    "stepsMedian": 21,
+    "remainingMedian": 5
+  },
+  {
+    "cap": 24,
+    "wins": 1080,
+    "winRate": 0.54,
+    "stepsMean": 19.988,
+    "stepsMedian": 23,
+    "remainingMedian": 7
+  },
+  {
+    "cap": 30,
+    "wins": 1314,
+    "winRate": 0.657,
+    "stepsMean": 22.439,
+    "stepsMedian": 23,
+    "remainingMedian": 12
+  }
+]

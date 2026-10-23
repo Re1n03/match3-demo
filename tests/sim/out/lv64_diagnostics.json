@@ -1,0 +1,133 @@
+{
+  "games": 2000,
+  "seed": 1042,
+  "cap": 40,
+  "bots": {
+    "random": {
+      "games": 2000,
+      "wins": 231,
+      "winRate": 0.1155,
+      "jarAtLeast1": 2000,
+      "jarAtLeast1Rate": 1,
+      "jarAtLeast2": 1894,
+      "jarAtLeast2Rate": 0.947,
+      "honeyDestroyed": {
+        "0": 365,
+        "1": 512,
+        "2": 583,
+        "3": 296,
+        "4": 244
+      },
+      "honeyDestroyedRate": {
+        "0": 0.1825,
+        "1": 0.256,
+        "2": 0.2915,
+        "3": 0.148,
+        "4": 0.122
+      },
+      "resolutions": 116216,
+      "rightEmptyMean": 0.953182005920011,
+      "rightEmptyMax": 1,
+      "col7EmptyMean": 0.953182005920011,
+      "col7EmptyMax": 1,
+      "gamesWithShuffle": 1042,
+      "gamesWithShuffleRate": 0.521,
+      "shuffleEvents": 1300,
+      "shuffleLeftEmptyMean": 0,
+      "shuffleRightEmptyMean": 0.9992307692307693,
+      "shuffleRightEntriesEmptyMean": 0,
+      "shuffleCol7EmptyMean": 0.9992307692307693,
+      "entryFeeds": {
+        "0,5": 29078,
+        "0,6": 75944
+      },
+      "entryFeedTotal": 105022,
+      "exitNoSupply": 65,
+      "portalTransfers": 105022
+    },
+    "greedy": {
+      "games": 2000,
+      "wins": 1746,
+      "winRate": 0.873,
+      "jarAtLeast1": 2000,
+      "jarAtLeast1Rate": 1,
+      "jarAtLeast2": 2000,
+      "jarAtLeast2Rate": 1,
+      "honeyDestroyed": {
+        "0": 0,
+        "1": 0,
+        "2": 11,
+        "3": 243,
+        "4": 1746
+      },
+      "honeyDestroyedRate": {
+        "0": 0,
+        "1": 0,
+        "2": 0.0055,
+        "3": 0.1215,
+        "4": 0.873
+      },
+      "resolutions": 61563,
+      "rightEmptyMean": 1,
+      "rightEmptyMax": 1,
+      "col7EmptyMean": 1,
+      "col7EmptyMax": 1,
+      "gamesWithShuffle": 345,
+      "gamesWithShuffleRate": 0.1725,
+      "shuffleEvents": 372,
+      "shuffleLeftEmptyMean": 0,
+      "shuffleRightEmptyMean": 1,
+      "shuffleRightEntriesEmptyMean": 0,
+      "shuffleCol7EmptyMean": 1,
+      "entryFeeds": {
+        "0,5": 17897,
+        "0,6": 63675
+      },
+      "entryFeedTotal": 81572,
+      "exitNoSupply": 105,
+      "portalTransfers": 81572
+    },
+    "mixed": {
+      "games": 2000,
+      "wins": 1151,
+      "winRate": 0.5755,
+      "jarAtLeast1": 2000,
+      "jarAtLeast1Rate": 1,
+      "jarAtLeast2": 1999,
+      "jarAtLeast2Rate": 0.9995,
+      "honeyDestroyed": {
+        "0": 71,
+        "1": 127,
+        "2": 300,
+        "3": 350,
+        "4": 1152
+      },
+      "honeyDestroyedRate": {
+        "0": 0.0355,
+        "1": 0.0635,
+        "2": 0.15,
+        "3": 0.175,
+        "4": 0.576
+      },
+      "resolutions": 89993,
+      "rightEmptyMean": 0.98512106497172,
+      "rightEmptyMax": 1,
+      "col7EmptyMean": 0.98512106497172,
+      "col7EmptyMax": 1,
+      "gamesWithShuffle": 688,
+      "gamesWithShuffleRate": 0.344,
+      "shuffleEvents": 813,
+      "shuffleLeftEmptyMean": 0,
+      "shuffleRightEmptyMean": 1,
+      "shuffleRightEntriesEmptyMean": 0,
+      "shuffleCol7EmptyMean": 1,
+      "entryFeeds": {
+        "0,5": 25459,
+        "0,6": 76346
+      },
+      "entryFeedTotal": 101805,
+      "exitNoSupply": 103,
+      "portalTransfers": 101805
+    }
+  }
+}

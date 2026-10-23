@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>关卡片本模拟基线 · Histogram</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { margin: 0; padding: 24px; background: #0f172a; color: #e2e8f0; font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; }
+    h1 { font-size: 1.25rem; color: #38bdf8; margin: 0 0 6px; }
+    .sub { color: #94a3b8; font-size: 0.82rem; margin-bottom: 18px; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 18px; }
+    .card h2 { margin: 0 0 4px; font-size: 1.05rem; }
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(140px, 1fr)); gap: 8px; margin: 10px 0 14px; }
+    .metric { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 8px 10px; }
+    .metric .k { color: #94a3b8; font-size: 0.72rem; }
+    .metric .v { font-size: 1rem; font-weight: 700; color: #f8fafc; }
+    .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .chart-box { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px; }
+    .chart-title { color: #cbd5e1; font-size: 0.8rem; margin-bottom: 6px; }
+    canvas { width: 100%; height: 230px; display: block; }
+    .hint { color: #94a3b8; font-size: 0.75rem; margin-top: 8px; }
+    @media (max-width: 900px) { .metrics { grid-template-columns: repeat(2, 1fr); } .charts { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <h1>关卡片本模拟基线</h1>
+  <div class="sub">Node 无头模拟器 · random（下界） / greedy（上界） / mixed（50% 混合） · 固定初始棋盘，仅补料/洗牌 seed 变化</div>
+  <div id="app"></div>
+
+  <script src="out/summary.js"></script>
+  <script>
+    const data = window.SIM_DATA || {};
+    const app = document.getElementById('app');
+    const order = [
+      'lv62_random', 'lv62_greedy', 'lv62_mixed',
+      'lv63_random', 'lv63_greedy', 'lv63_mixed',
+      'lv64_random', 'lv64_greedy', 'lv64_mixed'
+    ];
+    const names = {
+      random: 'random（随机合法交换）',
+      greedy: 'greedy（目标优先）',
+      mixed: 'mixed（50% greedy / 50% random）'
+    };
+
+    function fmtPct(x) { return (x * 100).toFixed(1) + '%'; }
+    function fmtNum(x) { return Number.isInteger(x) ? String(x) : Number(x).toFixed(2); }
+
+    function drawHistogram(canvas, histogram, color, xLabel) {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      const w = rect.width, h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const keys = Object.keys(histogram || {}).map(Number).sort((a, b) => a - b);
+      if (!keys.length) {
+        ctx.fillStyle = '#64748b';
+        ctx.font = '13px sans-serif';
+        ctx.fillText('无数据', 16, h / 2);
+        return;
+      }
+      const counts = keys.map(k => histogram[k]);
+      const maxCount = Math.max(...counts);
+      const pad = { left: 40, right: 12, top: 16, bottom: 30 };
+      const plotW = w - pad.left - pad.right;
+      const plotH = h - pad.top - pad.bottom;
+      const barW = plotW / keys.length;
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        const y = pad.top + plotH - (plotH * i / 4);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(w - pad.right, y);
+        ctx.stroke();
+        ctx.fillStyle = '#64748b';
+        ctx.font = '10px sans-serif';
+        ctx.fillText(String(Math.round(maxCount * i / 4)), 6, y + 3);
+      }
+
+      ctx.fillStyle = color;
+      keys.forEach((key, i) => {
+        const barH = maxCount ? plotH * (histogram[key] / maxCount) : 0;
+        const x = pad.left + i * barW + 1;
+        const y = pad.top + plotH - barH;
+        ctx.fillRect(x, y, Math.max(2, barW - 2), barH);
+      });
+
+      // x 轴刻度：最多显示 12 个
+      const step = Math.max(1, Math.ceil(keys.length / 12));
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      keys.forEach((key, i) => {
+        if (i % step !== 0 && i !== keys.length - 1) return;
+        ctx.fillText(String(key), pad.left + i * barW + barW / 2, h - 12);
+      });
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText(xLabel, pad.left, 11);
+    }
+
+    for (const key of order) {
+      const s = data[key];
+      if (!s) continue;
+      const card = document.createElement('section');
+      card.className = 'card';
+      card.innerHTML = `
+        <h2>Lv${s.level} · ${names[s.bot] || s.bot}</h2>
+        <div class="hint">局数 ${s.games} · 固定初始棋盘 · seed ${s.seedBase}</div>
+        <div class="metrics">
+          <div class="metric"><div class="k">通关率</div><div class="v">${fmtPct(s.winRate)}</div></div>
+          <div class="metric"><div class="k">使用步数 均值 / 中位</div><div class="v">${fmtNum(s.stepsUsed.mean)} / ${fmtNum(s.stepsUsed.median)}</div></div>
+          <div class="metric"><div class="k">P15 / P85</div><div class="v">${s.stepsUsed.p15} / ${s.stepsUsed.p85}</div></div>
+          <div class="metric"><div class="k">每步级联率 (≥2轮)</div><div class="v">${fmtPct(s.cascade.rate)}</div></div>
+          <div class="metric"><div class="k">通关剩余步数 均值 / 中位</div><div class="v">${fmtNum(s.remainingMovesOnWin.mean)} / ${fmtNum(s.remainingMovesOnWin.median)}</div></div>
+          <div class="metric"><div class="k">洗牌次数 / 熔断</div><div class="v">${s.shuffles.total} / ${s.fuses.total}</div></div>
+          <div class="metric"><div class="k">Lv63 含共鸣对局占比</div><div class="v">${s.lv63 ? fmtPct(s.lv63.resonance.gameRate) : '—'}</div></div>
+          <div class="metric"><div class="k">Lv63 共鸣激活事件占比</div><div class="v">${s.lv63 ? fmtPct(s.lv63.resonance.activationShare) : '—'}</div></div>
+          <div class="metric"><div class="k">Lv63 单罐A / 单罐B / 双罐</div><div class="v">${s.lv63 ? `${s.lv63.activationOrder.singleA} / ${s.lv63.activationOrder.singleB} / ${s.lv63.activationOrder.dual}` : '—'}</div></div>
+          <div class="metric"><div class="k">Lv63 首次激活 A / B / 双罐</div><div class="v">${s.lv63 ? `${s.lv63.firstResolution.A} / ${s.lv63.firstResolution.B} / ${s.lv63.firstResolution.dual}` : '—'}</div></div>
+        </div>
+        <div class="charts">
+          <div class="chart-box">
+            <div class="chart-title">使用步数分布</div>
+            <canvas class="steps"></canvas>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">通关时剩余步数分布</div>
+            <canvas class="remaining"></canvas>
+          </div>
+        </div>
+      `;
+      app.appendChild(card);
+      const stepsCanvas = card.querySelector('canvas.steps');
+      const remainingCanvas = card.querySelector('canvas.remaining');
+      drawHistogram(stepsCanvas, s.stepsUsed.histogram, '#38bdf8', '使用步数');
+      drawHistogram(remainingCanvas, s.remainingMovesOnWin.histogram, '#10b981', '剩余步数');
+    }
+  </script>
+</body>
+</html>
